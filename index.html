@@ -359,7 +359,7 @@
     <div class="form-meta">
       <button class="upload-btn">
         + 图片
-        <input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">
+        <input type="file" accept="image/*" id="imageInput" multiple onchange="handleImageSelect(event)">
       </button>
       <input type="text" class="mood-input" id="newMood" placeholder="此刻心情…">
       <input type="text" class="tag-input"  id="newTag"  placeholder="标签…">
@@ -407,7 +407,7 @@
   const storage = firebase.storage();
 
   let entries = [];
-  let pendingImageFile = null;
+  let pendingImageFiles = [];
 
   // ── Helpers ──
   function setLoading(pct) {
@@ -438,23 +438,24 @@
 
   // ── Image ──
   function handleImageSelect(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    pendingImageFile = file;
+    const files = Array.from(event.target.files);
+    if (!files.length) return;
+    pendingImageFiles = files;
     const reader = new FileReader();
     reader.onload = function(e) {
       const thumb = document.getElementById('previewThumb');
       thumb.src = e.target.result;
       thumb.classList.add('visible');
+      thumb.title = files.length > 1 ? '已选 ' + files.length + ' 张，点击移除' : '点击移除';
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(files[0]);
   }
 
   function clearImage() {
-    pendingImageFile = null;
+    pendingImageFiles = [];
     document.getElementById('imageInput').value = '';
     const thumb = document.getElementById('previewThumb');
-    thumb.src = ''; thumb.classList.remove('visible');
+    thumb.src = ''; thumb.classList.remove('visible'); thumb.title = '';
   }
 
   function uploadImage(file, id) {
@@ -496,40 +497,66 @@
     const q    = document.getElementById('newQuote').value.trim();
     const mood = document.getElementById('newMood').value.trim();
     const tag  = document.getElementById('newTag').value.trim();
-    if (!q && !pendingImageFile) return;
+    if (!q && !pendingImageFiles.length) return;
 
     document.getElementById('saveBtn').disabled = true;
     setStatus('保存中…', false);
     setLoading(40);
 
     const ts = Date.now();
-    const doSave = function(imageUrl) {
-      db.collection('entries').add({ quote: q, tag: tag, mood: mood, image: imageUrl || null, ts: ts })
+
+    if (pendingImageFiles.length > 0) {
+      // upload all images as separate entries
+      const files = pendingImageFiles.slice();
+      let done = 0;
+      let failed = 0;
+      files.forEach(function(file, idx) {
+        const id = ts.toString() + '_' + idx;
+        uploadImage(file, id)
+          .then(function(imageUrl) {
+            return db.collection('entries').add({ quote: q, tag: tag, mood: mood, image: imageUrl, ts: ts + idx });
+          })
+          .then(function(docRef) {
+            entries.unshift({ firestoreId: docRef.id, quote: q, tag: tag, mood: mood, image: entries[0] && entries[0].image, ts: ts + idx });
+            // reload from server after all done to get correct urls
+            done++;
+            if (done + failed === files.length) {
+              document.getElementById('newQuote').value = '';
+              document.getElementById('newMood').value  = '';
+              document.getElementById('newTag').value   = '';
+              clearImage();
+              setLoading(100);
+              setStatus('已保存 ' + done + ' 张');
+              switchView('photos');
+              loadEntries(); // reload fresh from firestore
+              document.getElementById('saveBtn').disabled = false;
+            }
+          })
+          .catch(function(e) {
+            failed++;
+            console.error(e);
+            if (done + failed === files.length) {
+              setStatus(failed + ' 张上传失败');
+              document.getElementById('saveBtn').disabled = false;
+            }
+          });
+      });
+    } else {
+      // text only
+      db.collection('entries').add({ quote: q, tag: tag, mood: mood, image: null, ts: ts })
         .then(function(docRef) {
-          entries.unshift({ firestoreId: docRef.id, quote: q, tag: tag, mood: mood, image: imageUrl || null, ts: ts });
+          entries.unshift({ firestoreId: docRef.id, quote: q, tag: tag, mood: mood, image: null, ts: ts });
           document.getElementById('newQuote').value = '';
           document.getElementById('newMood').value  = '';
           document.getElementById('newTag').value   = '';
           clearImage();
           setLoading(100);
           setStatus('已保存');
-          switchView(imageUrl ? 'photos' : 'texts');
+          switchView('texts');
           render();
         })
         .catch(function(e) { setStatus('保存失败'); console.error(e); })
         .finally(function() { document.getElementById('saveBtn').disabled = false; });
-    };
-
-    if (pendingImageFile) {
-      uploadImage(pendingImageFile, ts.toString())
-        .then(doSave)
-        .catch(function(e) {
-          setStatus('图片上传失败');
-          console.error(e);
-          document.getElementById('saveBtn').disabled = false;
-        });
-    } else {
-      doSave(null);
     }
   }
 
