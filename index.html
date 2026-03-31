@@ -5,23 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>林与克 · 留下来的话</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 
   :root {
     --bg: #0e0d0b;
     --surface: #141210;
-    --surface2: #1a1815;
-    --border: #272320;
-    --border2: #312e2a;
+    --border: #242220;
+    --border2: #2e2b27;
     --text: #d8cebb;
-    --muted: #635c52;
+    --muted: #5a5349;
     --accent: #c4a882;
     --accent2: #a8906c;
-    --mood-calm: #7a9e8e;
-    --mood-moved: #9e7a8e;
-    --mood-heavy: #7a8e9e;
-    --mood-warm: #c4a882;
-    --mood-sharp: #9e8a7a;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,527 +26,309 @@
     color: var(--text);
     font-family: 'Noto Serif SC', serif;
     min-height: 100vh;
-    padding: 0 0 100px;
     opacity: 0;
-    animation: pageIn 0.8s ease forwards;
+    animation: pageIn 0.6s ease forwards;
   }
 
-  @keyframes pageIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
 
-  header {
-    padding: 56px 40px 44px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
+  header { padding: 44px 32px 0; position: relative; }
 
   header::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
+    top: 0; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0.35;
+    opacity: 0.25;
   }
 
-  .header-eyebrow {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.4em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 18px;
+  .header-inner {
+    max-width: 960px; margin: 0 auto;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
   }
 
   h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(26px, 5vw, 40px);
-    font-weight: 300;
-    color: var(--accent);
-    line-height: 1.15;
-    margin-bottom: 10px;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 300; color: var(--accent); letter-spacing: 0.02em;
   }
 
-  .subtitle { font-size: 13px; color: var(--muted); font-weight: 300; margin-bottom: 20px; }
-
-  .header-quote {
+  .header-eyebrow {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 14px;
-    font-style: italic;
-    color: #4a4540;
-    letter-spacing: 0.04em;
-    line-height: 1.7;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    max-width: 480px;
+    font-size: 10px; letter-spacing: 0.4em;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 10px;
   }
 
-  .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+  .nav-tabs { display: flex; gap: 2px; }
 
-  /* ── Loading state ── */
-  .loading-bar {
-    position: fixed;
-    top: 0; left: 0;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.6;
-    transition: width 0.3s ease;
-    z-index: 999;
-  }
-
-  .sync-status {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    min-height: 16px;
-    transition: opacity 0.3s;
-  }
-
-  /* ── Add section ── */
-  .add-section { margin: 44px 0 36px; }
-
-  .section-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.35em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 18px;
-  }
-
-  textarea {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'Noto Serif SC', serif;
-    font-size: 15px;
-    line-height: 1.85;
-    padding: 18px 20px;
-    resize: vertical;
-    min-height: 96px;
-    outline: none;
-    transition: border-color 0.25s, box-shadow 0.25s;
-    font-weight: 300;
-    border-radius: 0;
-    -webkit-appearance: none;
-  }
-
-  textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(196,168,130,0.08); }
-  textarea::placeholder { color: var(--muted); font-style: italic; }
-
-  .mood-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .mood-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-right: 4px;
-  }
-
-  .mood-btn {
+  .nav-tab {
     background: transparent;
     border: 1px solid var(--border2);
     color: var(--muted);
     font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    padding: 5px 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
+    font-size: 12px; letter-spacing: 0.2em;
+    padding: 8px 20px; cursor: pointer;
+    transition: all 0.2s; text-transform: uppercase;
   }
 
-  .mood-btn:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
-  .mood-btn.selected-calm  { border-color: var(--mood-calm);  color: var(--mood-calm);  background: rgba(122,158,142,0.07); }
-  .mood-btn.selected-moved { border-color: var(--mood-moved); color: var(--mood-moved); background: rgba(158,122,142,0.07); }
-  .mood-btn.selected-heavy { border-color: var(--mood-heavy); color: var(--mood-heavy); background: rgba(122,142,158,0.07); }
-  .mood-btn.selected-warm  { border-color: var(--mood-warm);  color: var(--mood-warm);  background: rgba(196,168,130,0.07); }
-  .mood-btn.selected-sharp { border-color: var(--mood-sharp); color: var(--mood-sharp); background: rgba(158,138,122,0.07); }
+  .nav-tab:hover { color: var(--accent); border-color: var(--accent); background: transparent; }
+  .nav-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(196,168,130,0.06); }
 
-  .upload-area {
-    border: 1px dashed var(--border2);
-    padding: 14px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-    margin-top: 10px;
-    color: var(--muted);
-    font-size: 13px;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    letter-spacing: 0.06em;
-    position: relative;
+  .main { max-width: 960px; margin: 0 auto; padding: 0 32px 100px; }
+
+  .add-form {
+    padding: 28px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
   }
 
-  .upload-area:hover { border-color: var(--accent); color: var(--accent); }
+  .form-row { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
 
-  .upload-area input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
+  textarea {
+    flex: 1; min-width: 200px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Noto Serif SC', serif;
+    font-size: 14px; line-height: 1.8;
+    padding: 14px 16px; resize: none; height: 56px;
+    outline: none; transition: border-color 0.2s, height 0.2s;
+    font-weight: 300; border-radius: 0; -webkit-appearance: none; overflow: hidden;
   }
 
-  .preview-wrap { margin-top: 10px; position: relative; display: none; }
+  textarea:focus { border-color: var(--accent); height: 96px; }
+  textarea::placeholder { color: var(--muted); font-style: italic; font-size: 13px; }
 
-  .preview-wrap img {
-    width: 100%;
-    max-height: 180px;
-    object-fit: cover;
-    display: block;
-    opacity: 0.82;
-  }
-
-  .preview-remove {
-    position: absolute;
-    top: 8px; right: 8px;
-    background: rgba(0,0,0,0.8);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 11px;
-    padding: 4px 10px;
-    cursor: pointer;
-    font-family: 'Cormorant Garamond', serif;
-    letter-spacing: 0.1em;
-    transition: all 0.2s;
-  }
-
-  .preview-remove:hover { color: var(--text); background: rgba(0,0,0,0.95); }
-
-  .add-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    align-items: center;
+  .form-meta {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 10px; align-items: center;
   }
 
   input[type="text"] {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'Noto Serif SC', serif;
-    font-size: 13px;
-    padding: 10px 16px;
-    outline: none;
-    transition: border-color 0.2s;
-    border-radius: 0;
-    -webkit-appearance: none;
-    min-width: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Noto Serif SC', serif;
+    font-size: 12px; padding: 7px 12px; outline: none;
+    transition: border-color 0.2s; border-radius: 0; -webkit-appearance: none;
   }
 
   input[type="text"]:focus { border-color: var(--accent); }
   input[type="text"]::placeholder { color: var(--muted); }
 
+  .mood-input { width: 110px; }
+  .tag-input  { width: 110px; }
+
   button {
-    background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    letter-spacing: 0.15em;
-    padding: 10px 22px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    border-radius: 0;
-    -webkit-appearance: none;
+    background: transparent; border: 1px solid var(--accent);
+    color: var(--accent); font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; letter-spacing: 0.15em; padding: 8px 20px;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    border-radius: 0; -webkit-appearance: none; text-transform: uppercase;
   }
 
   button:hover { background: var(--accent); color: var(--bg); }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button:disabled { opacity: 0.35; cursor: not-allowed; }
   button:disabled:hover { background: transparent; color: var(--accent); }
 
-  .filter-bar {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 24px;
+  .upload-btn {
+    border-color: var(--border2); color: var(--muted);
+    font-size: 11px; padding: 7px 14px;
+    position: relative; cursor: pointer;
   }
 
-  .filter-label {
+  .upload-btn:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+  .upload-btn input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+
+  .preview-thumb {
+    width: 42px; height: 42px; object-fit: cover;
+    opacity: 0.8; display: none; cursor: pointer;
+    border: 1px solid var(--border); align-self: center; flex-shrink: 0;
+  }
+
+  .preview-thumb.visible { display: block; }
+
+  .status-bar {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-right: 4px;
+    font-size: 11px; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase;
+    min-height: 14px; margin-bottom: 8px;
   }
 
-  .filter-tag {
-    background: transparent;
-    border: 1px solid var(--border2);
-    color: var(--muted);
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Photo grid */
+  .photo-grid { columns: 3; column-gap: 3px; }
+  @media (max-width: 700px) { .photo-grid { columns: 2; } }
+  @media (max-width: 380px) { .photo-grid { columns: 1; } }
+
+  .photo-item {
+    break-inside: avoid; margin-bottom: 3px;
+    position: relative; cursor: zoom-in;
+    overflow: hidden; background: var(--surface);
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .photo-item img {
+    width: 100%; display: block;
+    opacity: 0.88; transition: opacity 0.25s, transform 0.3s;
+  }
+
+  .photo-item:hover img { opacity: 1; transform: scale(1.025); }
+
+  .photo-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+    opacity: 0; transition: opacity 0.2s;
+    display: flex; align-items: flex-end;
+    padding: 10px; gap: 8px;
+  }
+
+  .photo-item:hover .photo-overlay { opacity: 1; }
+
+  .photo-overlay-text {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    padding: 4px 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-style: italic;
+    font-size: 11px; color: rgba(255,255,255,0.65);
+    letter-spacing: 0.06em; font-style: italic;
+    flex: 1; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
   }
 
-  .filter-tag:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
-  .filter-tag.active { border-color: var(--accent); color: var(--accent); background: rgba(196,168,130,0.06); }
-
-  .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .count { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
-
-  .export-btn {
-    background: transparent;
-    border: 1px solid var(--border2);
-    color: var(--muted);
+  .photo-delete {
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.45);
+    font-size: 10px; padding: 3px 8px; cursor: pointer;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    padding: 6px 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
+    letter-spacing: 0.1em; flex-shrink: 0;
+    transition: all 0.2s; text-transform: uppercase; border-radius: 0;
   }
 
-  .export-btn:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+  .photo-delete:hover { background: rgba(160,60,40,0.65); color: #fff; border-color: transparent; }
 
-  .divider { border: none; border-top: 1px solid var(--border); margin: 0 0 36px; }
+  /* Text list */
+  .text-list { display: flex; flex-direction: column; }
 
-  .entries { display: flex; flex-direction: column; gap: 2px; }
-
-  .entry {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 24px 28px;
-    position: relative;
-    transition: border-color 0.25s;
-    animation: entryIn 0.45s ease both;
+  .text-entry {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.4s ease both;
   }
 
-  @keyframes entryIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  .text-entry:first-child { padding-top: 0; }
+
+  .text-body {
+    font-size: 16px; line-height: 2.05;
+    color: var(--text); font-weight: 300;
+    white-space: pre-wrap; word-break: break-word; letter-spacing: 0.02em;
   }
 
-  .entry:hover { border-color: var(--border2); }
-
-  .entry-mood-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; }
-  .mood-bar-calm  { background: var(--mood-calm);  opacity: 0.5; }
-  .mood-bar-moved { background: var(--mood-moved); opacity: 0.5; }
-  .mood-bar-heavy { background: var(--mood-heavy); opacity: 0.5; }
-  .mood-bar-warm  { background: var(--mood-warm);  opacity: 0.5; }
-  .mood-bar-sharp { background: var(--mood-sharp); opacity: 0.5; }
-
-  .entry-image {
-    width: 100%;
-    max-height: 280px;
-    object-fit: cover;
-    display: block;
-    margin-bottom: 18px;
-    opacity: 0.86;
-    cursor: zoom-in;
-    transition: opacity 0.2s;
+  .text-foot {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-top: 12px;
+    flex-wrap: wrap; gap: 6px;
   }
 
-  .entry-image:hover { opacity: 0.95; }
+  .text-meta { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 
-  .entry-quote {
-    font-size: 15px;
-    line-height: 1.95;
-    color: var(--text);
-    font-weight: 300;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  .entry-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .entry-meta-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-
-  .entry-tag {
+  .text-tag {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
-    color: var(--accent2);
-    letter-spacing: 0.1em;
-    font-style: italic;
+    font-size: 12px; color: var(--accent2);
+    letter-spacing: 0.08em; font-style: italic;
   }
 
-  .entry-mood-label {
+  .text-mood {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    font-style: italic;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 0.06em; font-style: italic;
   }
 
-  .entry-date { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; font-family: 'Cormorant Garamond', serif; }
-
-  .entry-actions {
-    position: absolute;
-    top: 14px; right: 14px;
-    display: flex;
-    gap: 6px;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .entry:hover .entry-actions { opacity: 1; }
-
-  .btn-icon {
-    background: rgba(14,13,11,0.85);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 11px;
-    cursor: pointer;
-    padding: 4px 10px;
-    transition: all 0.2s;
+  .text-date {
     font-family: 'Cormorant Garamond', serif;
-    letter-spacing: 0.08em;
+    font-size: 11px; color: #322f2b; letter-spacing: 0.06em;
   }
 
-  .btn-icon:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
-  .btn-delete:hover { color: #b07060; border-color: #b07060; background: rgba(176,112,96,0.07); }
+  .text-delete {
+    background: transparent; border: none;
+    color: #322f2b; font-size: 11px; cursor: pointer;
+    padding: 2px 0; transition: color 0.2s;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  .text-delete:hover { color: #a06050; background: transparent; }
 
   .empty {
-    text-align: center;
-    padding: 60px 20px;
-    color: #3a3530;
+    text-align: center; padding: 80px 20px;
+    color: #252220; font-family: 'Cormorant Garamond', serif;
+    font-size: 15px; font-style: italic; letter-spacing: 0.06em;
+  }
+
+  .view-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 20px;
+  }
+
+  .view-count {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
-    font-style: italic;
-    letter-spacing: 0.06em;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 0.2em; text-transform: uppercase;
   }
 
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.88);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    backdrop-filter: blur(2px);
-  }
-
-  .modal-overlay.active { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    padding: 28px;
-    width: 100%;
-    max-width: 540px;
-    max-height: 92vh;
-    overflow-y: auto;
-    animation: modalIn 0.25s ease both;
-  }
-
-  @keyframes modalIn {
-    from { opacity: 0; transform: scale(0.97) translateY(8px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  .modal h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.35em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 18px;
-  }
-
-  .modal-actions { display: flex; gap: 10px; margin-top: 18px; justify-content: flex-end; }
-  .btn-cancel { border-color: var(--border); color: var(--muted); }
-  .btn-cancel:hover { background: var(--border); color: var(--text); }
-
+  /* Lightbox */
   .lightbox {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.96);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    cursor: zoom-out;
-    padding: 24px;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.97); z-index: 200;
+    align-items: center; justify-content: center; padding: 24px;
   }
 
   .lightbox.active { display: flex; }
 
-  .lightbox img {
-    max-width: 90vw;
-    max-height: 88vh;
-    object-fit: contain;
-    animation: lbIn 0.2s ease both;
-    cursor: default;
+  .lightbox-img {
+    max-width: 92vw; max-height: 90vh;
+    object-fit: contain; animation: lbIn 0.2s ease; cursor: default;
   }
 
   @keyframes lbIn {
     from { opacity: 0; transform: scale(0.96); }
-    to { opacity: 1; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1); }
   }
 
   .lightbox-close {
-    position: fixed;
-    top: 20px; right: 24px;
-    color: var(--muted);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: color 0.2s;
-    background: none;
-    border: none;
-    padding: 8px;
+    position: fixed; top: 18px; right: 22px;
+    color: #3a3530; font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase;
+    cursor: pointer; background: none; border: none; padding: 8px; transition: color 0.2s;
   }
 
-  .lightbox-close:hover { color: var(--text); background: none; }
+  .lightbox-close:hover { color: var(--muted); background: none; }
+
+  .lightbox-caption {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; color: #3a3530;
+    letter-spacing: 0.08em; font-style: italic;
+    text-align: center; max-width: 80vw;
+  }
+
+  .loading-bar {
+    position: fixed; top: 0; left: 0;
+    height: 1px; background: var(--accent); opacity: 0.5;
+    z-index: 999; transition: width 0.3s ease; pointer-events: none;
+  }
 
   @media (max-width: 600px) {
-    header { padding: 40px 20px 32px; }
-    .container { padding: 0 16px; }
-    .add-section { margin: 32px 0 28px; }
-    .entry { padding: 18px 20px; }
-    .add-row { flex-wrap: wrap; }
-    .add-row button { width: 100%; }
-    .entry-actions { opacity: 1; top: 12px; right: 12px; }
-    .toolbar { flex-direction: column; align-items: flex-start; }
-    .mood-row { gap: 6px; }
-    .modal { padding: 22px 18px; }
+    header { padding: 32px 16px 0; }
+    .main { padding: 0 16px 80px; }
+    .nav-tab { padding: 7px 14px; font-size: 11px; }
+    .mood-input, .tag-input { width: 85px; }
   }
 </style>
 </head>
@@ -561,451 +337,289 @@
 <div class="loading-bar" id="loadingBar" style="width:0%"></div>
 
 <header>
-  <div class="container">
-    <div class="header-eyebrow">Personal Archive</div>
-    <h1>林与克 · 留下来的话</h1>
-    <div class="subtitle">那些被击中的瞬间</div>
-    <div class="header-quote">有些话只落一次，<br>要接住它。</div>
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">Personal Archive</div>
+      <h1>林与克 · 留下来的话</h1>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tab-photos" onclick="switchView('photos')">图片</button>
+      <button class="nav-tab" id="tab-texts" onclick="switchView('texts')">文字</button>
+    </div>
   </div>
 </header>
 
-<div class="container">
-
-  <div class="add-section">
-    <div class="section-label">记下来</div>
-    <div class="sync-status" id="syncStatus"></div>
-    <textarea id="newQuote" placeholder="把那句让你停住的话写在这里……（也可以只存图片）"></textarea>
-
-    <div class="mood-row">
-      <span class="mood-label">此刻</span>
-      <button class="mood-btn" data-mood="calm"  onclick="selectMood('calm',  'new')">平静</button>
-      <button class="mood-btn" data-mood="moved" onclick="selectMood('moved', 'new')">触动</button>
-      <button class="mood-btn" data-mood="heavy" onclick="selectMood('heavy', 'new')">沉重</button>
-      <button class="mood-btn" data-mood="warm"  onclick="selectMood('warm',  'new')">温热</button>
-      <button class="mood-btn" data-mood="sharp" onclick="selectMood('sharp', 'new')">刺痛</button>
+<div class="main">
+  <div class="add-form">
+    <div class="status-bar" id="statusBar"></div>
+    <div class="form-row">
+      <textarea id="newQuote" placeholder="写下那句让你停住的话……（纯图片可留空）"></textarea>
+      <img id="previewThumb" class="preview-thumb" src="" alt="" onclick="clearImage()" title="点击移除图片">
     </div>
-
-    <div class="upload-area">
-      添加图片（可选）
-      <input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event, 'previewImg', 'previewWrap', 'new')">
-    </div>
-
-    <div class="preview-wrap" id="previewWrap">
-      <img id="previewImg" src="" alt="">
-      <button class="preview-remove" onclick="clearImage('new')">移除</button>
-    </div>
-
-    <div class="add-row">
-      <input type="text" id="newTag" placeholder="标签（可选，如：被看见 / 照片 / 克说的）">
+    <div class="form-meta">
+      <button class="upload-btn">
+        + 图片
+        <input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">
+      </button>
+      <input type="text" class="mood-input" id="newMood" placeholder="此刻心情…">
+      <input type="text" class="tag-input"  id="newTag"  placeholder="标签…">
       <button id="saveBtn" onclick="addEntry()">保存</button>
     </div>
   </div>
 
-  <hr class="divider">
-
-  <div class="filter-bar" id="filterBar"></div>
-
-  <div class="toolbar">
-    <div id="countDisplay" class="count"></div>
-    <button class="export-btn" onclick="exportJSON()">导出备份</button>
+  <div class="view active" id="view-photos">
+    <div class="view-header">
+      <div class="view-count" id="photoCount"></div>
+    </div>
+    <div class="photo-grid" id="photoGrid"></div>
   </div>
 
-  <div id="entries" class="entries"></div>
-
-</div>
-
-<!-- Edit Modal -->
-<div class="modal-overlay" id="editModal">
-  <div class="modal">
-    <h3>编辑这条记录</h3>
-    <textarea id="editQuote" style="min-height:90px"></textarea>
-
-    <div class="mood-row" style="margin-top:12px">
-      <span class="mood-label">此刻</span>
-      <button class="mood-btn" data-mood="calm"  onclick="selectMood('calm',  'edit')">平静</button>
-      <button class="mood-btn" data-mood="moved" onclick="selectMood('moved', 'edit')">触动</button>
-      <button class="mood-btn" data-mood="heavy" onclick="selectMood('heavy', 'edit')">沉重</button>
-      <button class="mood-btn" data-mood="warm"  onclick="selectMood('warm',  'edit')">温热</button>
-      <button class="mood-btn" data-mood="sharp" onclick="selectMood('sharp', 'edit')">刺痛</button>
+  <div class="view" id="view-texts">
+    <div class="view-header">
+      <div class="view-count" id="textCount"></div>
     </div>
-
-    <div class="upload-area" style="margin-top:10px">
-      替换图片（可选）
-      <input type="file" accept="image/*" id="editImageInput" onchange="handleImageSelect(event, 'editPreviewImg', 'editPreviewWrap', 'edit')">
-    </div>
-
-    <div class="preview-wrap" id="editPreviewWrap">
-      <img id="editPreviewImg" src="" alt="">
-      <button class="preview-remove" onclick="clearImage('edit')">移除图片</button>
-    </div>
-
-    <div class="add-row" style="margin-top:10px">
-      <input type="text" id="editTag" placeholder="标签">
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">取消</button>
-      <button onclick="saveEdit()">保存</button>
-    </div>
+    <div class="text-list" id="textList"></div>
   </div>
 </div>
 
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="handleLightboxClick(event)">
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">关闭 ×</button>
-  <img id="lightboxImg" src="" alt="">
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-  import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
-  const firebaseConfig = {
+<script>
+  firebase.initializeApp({
     apiKey: "AIzaSyA7tXIfPSNFmH5wWgKDmWOHyXjy2y4oBCs",
     authDomain: "linnke-bf457.firebaseapp.com",
     projectId: "linnke-bf457",
     storageBucket: "linnke-bf457.firebasestorage.app",
     messagingSenderId: "229740644493",
-    appId: "1:229740644493:web:7e425b217372bd42d83ac4",
-    measurementId: "G-RNF6GX1QH7"
-  };
+    appId: "1:229740644493:web:7e425b217372bd42d83ac4"
+  });
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
+  const db = firebase.firestore();
+  const storage = firebase.storage();
 
-  // ── State ──
   let entries = [];
-  let editingId = null;
   let pendingImageFile = null;
-  let editImageUrl = null;
-  let pendingMood = null;
-  let editMood = null;
-  let activeFilter = null;
 
-  const moodMap = {
-    calm:  { label: '平静', color: 'var(--mood-calm)'  },
-    moved: { label: '触动', color: 'var(--mood-moved)' },
-    heavy: { label: '沉重', color: 'var(--mood-heavy)' },
-    warm:  { label: '温热', color: 'var(--mood-warm)'  },
-    sharp: { label: '刺痛', color: 'var(--mood-sharp)' },
-  };
-
+  // ── Helpers ──
   function setLoading(pct) {
-    document.getElementById('loadingBar').style.width = pct + '%';
-    if (pct >= 100) setTimeout(() => document.getElementById('loadingBar').style.width = '0%', 400);
+    const bar = document.getElementById('loadingBar');
+    bar.style.width = pct + '%';
+    if (pct >= 100) setTimeout(() => bar.style.width = '0%', 500);
   }
 
-  function setStatus(msg, fade = true) {
-    const el = document.getElementById('syncStatus');
+  function setStatus(msg, fade) {
+    if (fade === undefined) fade = true;
+    const el = document.getElementById('statusBar');
     el.textContent = msg;
-    if (fade && msg) setTimeout(() => { el.textContent = ''; }, 2000);
+    if (fade && msg) setTimeout(() => el.textContent = '', 2000);
   }
 
   function formatDate(ts) {
     const d = new Date(ts);
-    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}  ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    return d.getFullYear() + '.' +
+      String(d.getMonth()+1).padStart(2,'0') + '.' +
+      String(d.getDate()).padStart(2,'0') + '\u2002' +
+      String(d.getHours()).padStart(2,'0') + ':' +
+      String(d.getMinutes()).padStart(2,'0');
   }
 
   function esc(s) {
     return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ── Mood ──
-  window.selectMood = function(mood, mode) {
-    const container = mode === 'new'
-      ? document.querySelector('.add-section .mood-row')
-      : document.querySelector('#editModal .mood-row');
-    container.querySelectorAll('.mood-btn').forEach(b => b.className = 'mood-btn');
-    container.querySelector(`[data-mood="${mood}"]`).classList.add(`selected-${mood}`);
-    if (mode === 'new') pendingMood = mood;
-    else editMood = mood;
-  };
-
   // ── Image ──
-  window.handleImageSelect = function(event, imgId, wrapId, mode) {
+  function handleImageSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
-    if (mode === 'new') pendingImageFile = file;
-    else pendingImageFile = file;
+    pendingImageFile = file;
     const reader = new FileReader();
-    reader.onload = e => {
-      document.getElementById(imgId).src = e.target.result;
-      document.getElementById(wrapId).style.display = 'block';
-      if (mode === 'edit') editImageUrl = '__pending__';
+    reader.onload = function(e) {
+      const thumb = document.getElementById('previewThumb');
+      thumb.src = e.target.result;
+      thumb.classList.add('visible');
     };
     reader.readAsDataURL(file);
-  };
+  }
 
-  window.clearImage = function(mode) {
-    if (mode === 'new') {
-      pendingImageFile = null;
-      document.getElementById('imageInput').value = '';
-      document.getElementById('previewWrap').style.display = 'none';
-    } else {
-      editImageUrl = null;
-      pendingImageFile = null;
-      document.getElementById('editImageInput').value = '';
-      document.getElementById('editPreviewWrap').style.display = 'none';
-    }
-  };
+  function clearImage() {
+    pendingImageFile = null;
+    document.getElementById('imageInput').value = '';
+    const thumb = document.getElementById('previewThumb');
+    thumb.src = ''; thumb.classList.remove('visible');
+  }
 
-  async function uploadImage(file, id) {
-    const storageRef = ref(storage, `images/${id}`);
-    const reader = new FileReader();
-    return new Promise((resolve, reject) => {
-      reader.onload = async e => {
-        try {
-          await uploadString(storageRef, e.target.result, 'data_url');
-          const url = await getDownloadURL(storageRef);
-          resolve(url);
-        } catch (err) { reject(err); }
+  function uploadImage(file, id) {
+    return new Promise(function(resolve, reject) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const storageRef = storage.ref('images/' + id);
+        storageRef.putString(e.target.result, 'data_url')
+          .then(function() { return storageRef.getDownloadURL(); })
+          .then(resolve)
+          .catch(reject);
       };
       reader.readAsDataURL(file);
     });
   }
 
-  // ── Load from Firestore ──
-  async function loadEntries() {
+  // ── Load ──
+  function loadEntries() {
     setLoading(30);
     setStatus('同步中…', false);
-    try {
-      const q = query(collection(db, 'entries'), orderBy('ts', 'desc'));
-      const snap = await getDocs(q);
-      entries = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
-      setLoading(100);
-      setStatus('已同步');
-      render();
-    } catch (e) {
-      setLoading(100);
-      setStatus('加载失败，检查网络');
-      console.error(e);
-    }
+    db.collection('entries').orderBy('ts', 'desc').get()
+      .then(function(snap) {
+        entries = snap.docs.map(function(d) {
+          return Object.assign({ firestoreId: d.id }, d.data());
+        });
+        setLoading(100);
+        setStatus('');
+        render();
+      })
+      .catch(function(e) {
+        setLoading(100);
+        setStatus('加载失败');
+        console.error(e);
+      });
   }
 
   // ── Add ──
-  window.addEntry = async function() {
-    const q = document.getElementById('newQuote').value.trim();
-    const t = document.getElementById('newTag').value.trim();
+  function addEntry() {
+    const q    = document.getElementById('newQuote').value.trim();
+    const mood = document.getElementById('newMood').value.trim();
+    const tag  = document.getElementById('newTag').value.trim();
     if (!q && !pendingImageFile) return;
 
-    const saveBtn = document.getElementById('saveBtn');
-    saveBtn.disabled = true;
+    document.getElementById('saveBtn').disabled = true;
     setStatus('保存中…', false);
     setLoading(40);
 
-    try {
-      const ts = Date.now();
-      let imageUrl = null;
+    const ts = Date.now();
+    const doSave = function(imageUrl) {
+      db.collection('entries').add({ quote: q, tag: tag, mood: mood, image: imageUrl || null, ts: ts })
+        .then(function(docRef) {
+          entries.unshift({ firestoreId: docRef.id, quote: q, tag: tag, mood: mood, image: imageUrl || null, ts: ts });
+          document.getElementById('newQuote').value = '';
+          document.getElementById('newMood').value  = '';
+          document.getElementById('newTag').value   = '';
+          clearImage();
+          setLoading(100);
+          setStatus('已保存');
+          switchView(imageUrl ? 'photos' : 'texts');
+          render();
+        })
+        .catch(function(e) { setStatus('保存失败'); console.error(e); })
+        .finally(function() { document.getElementById('saveBtn').disabled = false; });
+    };
 
-      if (pendingImageFile) {
-        const tempId = ts.toString();
-        imageUrl = await uploadImage(pendingImageFile, tempId);
-      }
-
-      const docRef = await addDoc(collection(db, 'entries'), {
-        quote: q, tag: t, mood: pendingMood, image: imageUrl, ts
-      });
-
-      entries.unshift({ firestoreId: docRef.id, quote: q, tag: t, mood: pendingMood, image: imageUrl, ts });
-
-      document.getElementById('newQuote').value = '';
-      document.getElementById('newTag').value = '';
-      document.querySelector('.add-section .mood-row').querySelectorAll('.mood-btn').forEach(b => b.className = 'mood-btn');
-      pendingMood = null;
-      window.clearImage('new');
-      setLoading(100);
-      setStatus('已保存');
-      render();
-    } catch (e) {
-      setStatus('保存失败');
-      console.error(e);
-    } finally {
-      saveBtn.disabled = false;
+    if (pendingImageFile) {
+      uploadImage(pendingImageFile, ts.toString())
+        .then(doSave)
+        .catch(function(e) {
+          setStatus('图片上传失败');
+          console.error(e);
+          document.getElementById('saveBtn').disabled = false;
+        });
+    } else {
+      doSave(null);
     }
-  };
+  }
 
   // ── Delete ──
-  window.del = async function(firestoreId, imageUrl) {
-    if (!confirm('确认删除这条记录？')) return;
+  function delEntry(firestoreId, imageUrl) {
+    if (!confirm('确认删除？')) return;
     setStatus('删除中…', false);
-    try {
-      await deleteDoc(doc(db, 'entries', firestoreId));
-      if (imageUrl) {
-        try { await deleteObject(ref(storage, imageUrl)); } catch {}
-      }
-      entries = entries.filter(e => e.firestoreId !== firestoreId);
-      setStatus('已删除');
-      render();
-    } catch (e) {
-      setStatus('删除失败');
-      console.error(e);
-    }
-  };
-
-  // ── Edit ──
-  window.openEdit = function(firestoreId) {
-    const e = entries.find(x => x.firestoreId === firestoreId);
-    if (!e) return;
-    editingId = firestoreId;
-    editImageUrl = e.image || null;
-    editMood = e.mood || null;
-    pendingImageFile = null;
-    document.getElementById('editQuote').value = e.quote || '';
-    document.getElementById('editTag').value = e.tag || '';
-    const editMoodRow = document.querySelector('#editModal .mood-row');
-    editMoodRow.querySelectorAll('.mood-btn').forEach(b => b.className = 'mood-btn');
-    if (e.mood) editMoodRow.querySelector(`[data-mood="${e.mood}"]`)?.classList.add(`selected-${e.mood}`);
-    if (e.image) {
-      document.getElementById('editPreviewImg').src = e.image;
-      document.getElementById('editPreviewWrap').style.display = 'block';
-    } else {
-      document.getElementById('editPreviewWrap').style.display = 'none';
-    }
-    document.getElementById('editModal').classList.add('active');
-  };
-
-  window.closeModal = function() {
-    document.getElementById('editModal').classList.remove('active');
-    editingId = null; editImageUrl = null; editMood = null; pendingImageFile = null;
-  };
-
-  window.saveEdit = async function() {
-    if (!editingId) return;
-    setStatus('保存中…', false);
-    try {
-      let finalImageUrl = editImageUrl;
-
-      if (pendingImageFile && editImageUrl === '__pending__') {
-        finalImageUrl = await uploadImage(pendingImageFile, editingId + '_' + Date.now());
-      }
-
-      const updates = {
-        quote: document.getElementById('editQuote').value.trim(),
-        tag:   document.getElementById('editTag').value.trim(),
-        mood:  editMood,
-        image: finalImageUrl === '__pending__' ? null : finalImageUrl,
-      };
-
-      await updateDoc(doc(db, 'entries', editingId), updates);
-      const e = entries.find(x => x.firestoreId === editingId);
-      if (e) Object.assign(e, updates);
-      setStatus('已保存');
-      window.closeModal();
-      render();
-    } catch (e) {
-      setStatus('保存失败');
-      console.error(e);
-    }
-  };
-
-  // ── Export ──
-  window.exportJSON = function() {
-    const data = JSON.stringify(entries, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const now = new Date();
-    const stamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-    a.href = url; a.download = `linnke-backup-${stamp}.json`; a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  // ── Filter ──
-  function getAllTags() {
-    const tags = new Set();
-    entries.forEach(e => { if (e.tag) tags.add(e.tag); });
-    return [...tags];
+    db.collection('entries').doc(firestoreId).delete()
+      .then(function() {
+        if (imageUrl) {
+          storage.refFromURL(imageUrl).delete().catch(function() {});
+        }
+        entries = entries.filter(function(e) { return e.firestoreId !== firestoreId; });
+        setStatus('已删除');
+        render();
+      })
+      .catch(function(e) { setStatus('删除失败'); console.error(e); });
   }
 
-  function renderFilterBar() {
-    const bar = document.getElementById('filterBar');
-    const tags = getAllTags();
-    if (!tags.length) { bar.innerHTML = ''; return; }
-    bar.innerHTML =
-      `<span class="filter-label">筛选</span>` +
-      `<button class="filter-tag${activeFilter === null ? ' active' : ''}" onclick="setFilter(null)">全部</button>` +
-      tags.map(t => `<button class="filter-tag${activeFilter === t ? ' active' : ''}" onclick="setFilter('${esc(t)}')">${esc(t)}</button>`).join('');
+  // ── View switch ──
+  function switchView(view) {
+    document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
+    document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.getElementById('view-' + view).classList.add('active');
+    document.getElementById('tab-' + view).classList.add('active');
   }
-
-  window.setFilter = function(tag) {
-    activeFilter = tag;
-    renderFilterBar();
-    renderEntries();
-  };
 
   // ── Render ──
-  function renderEntries() {
-    const c = document.getElementById('entries');
-    const countEl = document.getElementById('countDisplay');
-    const filtered = activeFilter ? entries.filter(e => e.tag === activeFilter) : entries;
+  function render() {
+    renderPhotos();
+    renderTexts();
+  }
 
-    if (!filtered.length) {
-      countEl.textContent = entries.length ? '筛选结果为空' : '';
-      c.innerHTML = `<div class="empty">${entries.length ? '这个标签下还没有记录。' : '还没有记录，把第一句触动你的话写下来吧。'}</div>`;
-      return;
-    }
-
-    countEl.textContent = activeFilter ? `${filtered.length} / ${entries.length} 条` : `共 ${entries.length} 条`;
-
-    c.innerHTML = filtered.map((e, i) => {
-      const mood = e.mood && moodMap[e.mood];
-      return `
-        <div class="entry" style="animation-delay:${Math.min(i,8)*0.04}s">
-          ${mood ? `<div class="entry-mood-bar mood-bar-${e.mood}"></div>` : ''}
-          <div class="entry-actions">
-            <button class="btn-icon" onclick="openEdit('${e.firestoreId}')">编辑</button>
-            <button class="btn-icon btn-delete" onclick="del('${e.firestoreId}', '${e.image||''}')">删除</button>
-          </div>
-          ${e.image ? `<img class="entry-image" src="${e.image}" onclick="openLightbox(this.src)" loading="lazy">` : ''}
-          ${e.quote ? `<div class="entry-quote">${esc(e.quote)}</div>` : ''}
-          <div class="entry-meta">
-            <div class="entry-meta-left">
-              ${e.tag ? `<span class="entry-tag">${esc(e.tag)}</span>` : ''}
-              ${mood ? `<span class="entry-mood-label" style="color:${mood.color};opacity:0.75">${mood.label}</span>` : ''}
-            </div>
-            <span class="entry-date">${formatDate(e.ts)}</span>
-          </div>
-        </div>
-      `;
+  function renderPhotos() {
+    const photos = entries.filter(function(e) { return e.image; });
+    const grid = document.getElementById('photoGrid');
+    document.getElementById('photoCount').textContent = photos.length ? photos.length + ' 张' : '';
+    if (!photos.length) { grid.innerHTML = '<div class="empty">还没有图片。</div>'; return; }
+    grid.innerHTML = photos.map(function(e, i) {
+      const label = esc(e.tag || e.mood || '');
+      const imgSrc = esc(e.image);
+      return '<div class="photo-item" style="animation-delay:' + Math.min(i,12)*0.03 + 's">' +
+        '<img src="' + imgSrc + '" loading="lazy" onclick="openLightbox(\'' + imgSrc + '\',\'' + label + '\')">' +
+        '<div class="photo-overlay">' +
+          '<span class="photo-overlay-text">' + label + '</span>' +
+          '<button class="photo-delete" onclick="event.stopPropagation();delEntry(\'' + e.firestoreId + '\',\'' + imgSrc + '\')">删除</button>' +
+        '</div></div>';
     }).join('');
   }
 
-  function render() {
-    renderFilterBar();
-    renderEntries();
+  function renderTexts() {
+    const texts = entries.filter(function(e) { return e.quote; });
+    const list = document.getElementById('textList');
+    document.getElementById('textCount').textContent = texts.length ? texts.length + ' 条' : '';
+    if (!texts.length) { list.innerHTML = '<div class="empty">还没有文字记录。</div>'; return; }
+    list.innerHTML = texts.map(function(e, i) {
+      return '<div class="text-entry" style="animation-delay:' + Math.min(i,12)*0.03 + 's">' +
+        '<div class="text-body">' + esc(e.quote) + '</div>' +
+        '<div class="text-foot">' +
+          '<div class="text-meta">' +
+            (e.tag  ? '<span class="text-tag">'  + esc(e.tag)  + '</span>' : '') +
+            (e.mood ? '<span class="text-mood">' + esc(e.mood) + '</span>' : '') +
+            '<span class="text-date">' + formatDate(e.ts) + '</span>' +
+          '</div>' +
+          '<button class="text-delete" onclick="delEntry(\'' + e.firestoreId + '\',\'\')">删除</button>' +
+        '</div></div>';
+    }).join('');
   }
 
   // ── Lightbox ──
-  window.openLightbox = function(src) {
+  function openLightbox(src, caption) {
     document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxCaption').textContent = caption || '';
     document.getElementById('lightbox').classList.add('active');
     document.body.style.overflow = 'hidden';
-  };
+  }
 
-  window.closeLightbox = function() {
+  function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
-  };
+  }
 
-  window.handleLightboxClick = function(e) {
-    if (e.target === document.getElementById('lightbox')) window.closeLightbox();
-  };
-
-  // ── Keyboard ──
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { window.closeLightbox(); window.closeModal(); }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
   });
 
-  document.getElementById('editModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('editModal')) window.closeModal();
+  document.getElementById('newTag').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addEntry();
   });
 
-  document.getElementById('newTag').addEventListener('keydown', e => {
-    if (e.key === 'Enter') window.addEntry();
-  });
-
-  // ── Init ──
   loadEntries();
 </script>
 </body>
