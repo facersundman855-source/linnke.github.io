@@ -9,27 +9,44 @@
 
   :root {
     --bg: #0e0d0b;
-    --surface: #161410;
-    --border: #2a2620;
-    --text: #d4c9b8;
-    --muted: #6b6358;
+    --surface: #141210;
+    --surface2: #1a1815;
+    --border: #272320;
+    --border2: #312e2a;
+    --text: #d8cebb;
+    --muted: #635c52;
     --accent: #c4a882;
+    --accent2: #a8906c;
+    --mood-calm: #7a9e8e;
+    --mood-moved: #9e7a8e;
+    --mood-heavy: #7a8e9e;
+    --mood-warm: #c4a882;
+    --mood-sharp: #9e8a7a;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Noto Serif SC', serif;
     min-height: 100vh;
-    padding: 0 0 80px;
+    padding: 0 0 100px;
+    opacity: 0;
+    animation: pageIn 0.8s ease forwards;
+  }
+
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   header {
-    padding: 60px 40px 40px;
+    padding: 56px 40px 44px;
     border-bottom: 1px solid var(--border);
     position: relative;
+    overflow: hidden;
   }
 
   header::before {
@@ -38,40 +55,76 @@
     top: 0; left: 0; right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0.4;
+    opacity: 0.35;
   }
 
-  .header-title {
+  .header-eyebrow {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    letter-spacing: 0.3em;
+    font-size: 11px;
+    letter-spacing: 0.4em;
     color: var(--muted);
     text-transform: uppercase;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
 
   h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(28px, 5vw, 42px);
+    font-size: clamp(26px, 5vw, 40px);
     font-weight: 300;
     color: var(--accent);
-    line-height: 1.2;
-    margin-bottom: 8px;
+    line-height: 1.15;
+    margin-bottom: 10px;
   }
 
-  .subtitle { font-size: 13px; color: var(--muted); font-weight: 300; }
+  .subtitle { font-size: 13px; color: var(--muted); font-weight: 300; margin-bottom: 20px; }
 
-  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+  .header-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #4a4540;
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    max-width: 480px;
+  }
 
-  .add-section { margin: 48px 0 40px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
 
-  .add-section h2 {
+  /* ── Loading state ── */
+  .loading-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.6;
+    transition: width 0.3s ease;
+    z-index: 999;
+  }
+
+  .sync-status {
     font-family: 'Cormorant Garamond', serif;
     font-size: 11px;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.2em;
     color: var(--muted);
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+    min-height: 16px;
+    transition: opacity 0.3s;
+  }
+
+  /* ── Add section ── */
+  .add-section { margin: 44px 0 36px; }
+
+  .section-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 18px;
   }
 
   textarea {
@@ -81,30 +134,69 @@
     color: var(--text);
     font-family: 'Noto Serif SC', serif;
     font-size: 15px;
-    line-height: 1.8;
-    padding: 20px;
+    line-height: 1.85;
+    padding: 18px 20px;
     resize: vertical;
-    min-height: 100px;
+    min-height: 96px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.25s, box-shadow 0.25s;
     font-weight: 300;
+    border-radius: 0;
+    -webkit-appearance: none;
   }
 
-  textarea:focus { border-color: var(--accent); }
+  textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(196,168,130,0.08); }
   textarea::placeholder { color: var(--muted); font-style: italic; }
 
+  .mood-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .mood-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+
+  .mood-btn {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .mood-btn:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+  .mood-btn.selected-calm  { border-color: var(--mood-calm);  color: var(--mood-calm);  background: rgba(122,158,142,0.07); }
+  .mood-btn.selected-moved { border-color: var(--mood-moved); color: var(--mood-moved); background: rgba(158,122,142,0.07); }
+  .mood-btn.selected-heavy { border-color: var(--mood-heavy); color: var(--mood-heavy); background: rgba(122,142,158,0.07); }
+  .mood-btn.selected-warm  { border-color: var(--mood-warm);  color: var(--mood-warm);  background: rgba(196,168,130,0.07); }
+  .mood-btn.selected-sharp { border-color: var(--mood-sharp); color: var(--mood-sharp); background: rgba(158,138,122,0.07); }
+
   .upload-area {
-    border: 1px dashed var(--border);
-    padding: 16px;
+    border: 1px dashed var(--border2);
+    padding: 14px;
     text-align: center;
     cursor: pointer;
     transition: border-color 0.2s, color 0.2s;
-    margin-top: 12px;
+    margin-top: 10px;
     color: var(--muted);
     font-size: 13px;
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     position: relative;
   }
 
@@ -119,35 +211,36 @@
     height: 100%;
   }
 
-  .preview-wrap { margin-top: 12px; position: relative; display: none; }
+  .preview-wrap { margin-top: 10px; position: relative; display: none; }
 
   .preview-wrap img {
     width: 100%;
-    max-height: 200px;
+    max-height: 180px;
     object-fit: cover;
     display: block;
-    opacity: 0.85;
+    opacity: 0.82;
   }
 
   .preview-remove {
     position: absolute;
     top: 8px; right: 8px;
-    background: rgba(0,0,0,0.75);
+    background: rgba(0,0,0,0.8);
     border: 1px solid var(--border);
     color: var(--muted);
-    font-size: 12px;
+    font-size: 11px;
     padding: 4px 10px;
     cursor: pointer;
     font-family: 'Cormorant Garamond', serif;
     letter-spacing: 0.1em;
+    transition: all 0.2s;
   }
 
   .preview-remove:hover { color: var(--text); background: rgba(0,0,0,0.95); }
 
   .add-row {
     display: flex;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 10px;
+    margin-top: 10px;
     align-items: center;
   }
 
@@ -161,6 +254,9 @@
     padding: 10px 16px;
     outline: none;
     transition: border-color 0.2s;
+    border-radius: 0;
+    -webkit-appearance: none;
+    min-width: 0;
   }
 
   input[type="text"]:focus { border-color: var(--accent); }
@@ -173,47 +269,120 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 13px;
     letter-spacing: 0.15em;
-    padding: 10px 24px;
+    padding: 10px 22px;
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;
+    border-radius: 0;
+    -webkit-appearance: none;
   }
 
   button:hover { background: var(--accent); color: var(--bg); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button:disabled:hover { background: transparent; color: var(--accent); }
 
-  .divider { border: none; border-top: 1px solid var(--border); margin: 0 0 40px; }
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .filter-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+
+  .filter-tag {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    padding: 4px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-style: italic;
+  }
+
+  .filter-tag:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+  .filter-tag.active { border-color: var(--accent); color: var(--accent); background: rgba(196,168,130,0.06); }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .count { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  .export-btn {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .export-btn:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0 0 36px; }
 
   .entries { display: flex; flex-direction: column; gap: 2px; }
 
   .entry {
     background: var(--surface);
     border: 1px solid var(--border);
-    padding: 28px 32px;
+    padding: 24px 28px;
     position: relative;
-    transition: border-color 0.2s;
-    animation: fadeIn 0.4s ease;
+    transition: border-color 0.25s;
+    animation: entryIn 0.45s ease both;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+  @keyframes entryIn {
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .entry:hover { border-color: #3a3530; }
+  .entry:hover { border-color: var(--border2); }
+
+  .entry-mood-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; }
+  .mood-bar-calm  { background: var(--mood-calm);  opacity: 0.5; }
+  .mood-bar-moved { background: var(--mood-moved); opacity: 0.5; }
+  .mood-bar-heavy { background: var(--mood-heavy); opacity: 0.5; }
+  .mood-bar-warm  { background: var(--mood-warm);  opacity: 0.5; }
+  .mood-bar-sharp { background: var(--mood-sharp); opacity: 0.5; }
 
   .entry-image {
     width: 100%;
-    max-height: 300px;
+    max-height: 280px;
     object-fit: cover;
     display: block;
-    margin-bottom: 20px;
-    opacity: 0.88;
+    margin-bottom: 18px;
+    opacity: 0.86;
     cursor: zoom-in;
+    transition: opacity 0.2s;
   }
 
+  .entry-image:hover { opacity: 0.95; }
+
   .entry-quote {
-    font-size: 16px;
-    line-height: 1.9;
+    font-size: 15px;
+    line-height: 1.95;
     color: var(--text);
     font-weight: 300;
     white-space: pre-wrap;
@@ -224,26 +393,37 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 16px;
-    padding-top: 14px;
+    margin-top: 14px;
+    padding-top: 12px;
     border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 6px;
   }
+
+  .entry-meta-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
   .entry-tag {
     font-family: 'Cormorant Garamond', serif;
     font-size: 12px;
-    color: var(--accent);
+    color: var(--accent2);
     letter-spacing: 0.1em;
     font-style: italic;
   }
 
-  .entry-date { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+  .entry-mood-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    font-style: italic;
+  }
+
+  .entry-date { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; font-family: 'Cormorant Garamond', serif; }
 
   .entry-actions {
     position: absolute;
-    top: 16px; right: 16px;
+    top: 14px; right: 14px;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     opacity: 0;
     transition: opacity 0.2s;
   }
@@ -251,65 +431,70 @@
   .entry:hover .entry-actions { opacity: 1; }
 
   .btn-icon {
-    background: transparent;
-    border: none;
+    background: rgba(14,13,11,0.85);
+    border: 1px solid var(--border);
     color: var(--muted);
-    font-size: 13px;
+    font-size: 11px;
     cursor: pointer;
-    padding: 4px 8px;
-    transition: color 0.2s;
+    padding: 4px 10px;
+    transition: all 0.2s;
     font-family: 'Cormorant Garamond', serif;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
   }
 
-  .btn-icon:hover { background: transparent; color: var(--text); }
-  .btn-delete:hover { color: #c0826a; }
+  .btn-icon:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+  .btn-delete:hover { color: #b07060; border-color: #b07060; background: rgba(176,112,96,0.07); }
 
   .empty {
     text-align: center;
     padding: 60px 20px;
-    color: var(--muted);
+    color: #3a3530;
     font-family: 'Cormorant Garamond', serif;
     font-size: 16px;
     font-style: italic;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
   }
-
-  .count { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 20px; text-transform: uppercase; }
 
   .modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.88);
     z-index: 100;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: 20px;
+    backdrop-filter: blur(2px);
   }
 
   .modal-overlay.active { display: flex; }
 
   .modal {
     background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 32px;
+    border: 1px solid var(--border2);
+    padding: 28px;
     width: 100%;
-    max-width: 560px;
-    max-height: 90vh;
+    max-width: 540px;
+    max-height: 92vh;
     overflow-y: auto;
+    animation: modalIn 0.25s ease both;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.97) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
   }
 
   .modal h3 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 11px;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.35em;
     color: var(--muted);
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
-  .modal-actions { display: flex; gap: 12px; margin-top: 20px; justify-content: flex-end; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 18px; justify-content: flex-end; }
   .btn-cancel { border-color: var(--border); color: var(--muted); }
   .btn-cancel:hover { background: var(--border); color: var(--text); }
 
@@ -317,32 +502,88 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.95);
+    background: rgba(0,0,0,0.96);
     z-index: 200;
     align-items: center;
     justify-content: center;
     cursor: zoom-out;
+    padding: 24px;
   }
 
   .lightbox.active { display: flex; }
-  .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 88vh;
+    object-fit: contain;
+    animation: lbIn 0.2s ease both;
+    cursor: default;
+  }
+
+  @keyframes lbIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .lightbox-close {
+    position: fixed;
+    top: 20px; right: 24px;
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 8px;
+  }
+
+  .lightbox-close:hover { color: var(--text); background: none; }
+
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 32px; }
+    .container { padding: 0 16px; }
+    .add-section { margin: 32px 0 28px; }
+    .entry { padding: 18px 20px; }
+    .add-row { flex-wrap: wrap; }
+    .add-row button { width: 100%; }
+    .entry-actions { opacity: 1; top: 12px; right: 12px; }
+    .toolbar { flex-direction: column; align-items: flex-start; }
+    .mood-row { gap: 6px; }
+    .modal { padding: 22px 18px; }
+  }
 </style>
 </head>
 <body>
 
+<div class="loading-bar" id="loadingBar" style="width:0%"></div>
+
 <header>
   <div class="container">
-    <div class="header-title">Personal Archive</div>
+    <div class="header-eyebrow">Personal Archive</div>
     <h1>林与克 · 留下来的话</h1>
     <div class="subtitle">那些被击中的瞬间</div>
+    <div class="header-quote">有些话只落一次，<br>要接住它。</div>
   </div>
 </header>
 
 <div class="container">
 
   <div class="add-section">
-    <h2>记下来</h2>
+    <div class="section-label">记下来</div>
+    <div class="sync-status" id="syncStatus"></div>
     <textarea id="newQuote" placeholder="把那句让你停住的话写在这里……（也可以只存图片）"></textarea>
+
+    <div class="mood-row">
+      <span class="mood-label">此刻</span>
+      <button class="mood-btn" data-mood="calm"  onclick="selectMood('calm',  'new')">平静</button>
+      <button class="mood-btn" data-mood="moved" onclick="selectMood('moved', 'new')">触动</button>
+      <button class="mood-btn" data-mood="heavy" onclick="selectMood('heavy', 'new')">沉重</button>
+      <button class="mood-btn" data-mood="warm"  onclick="selectMood('warm',  'new')">温热</button>
+      <button class="mood-btn" data-mood="sharp" onclick="selectMood('sharp', 'new')">刺痛</button>
+    </div>
 
     <div class="upload-area">
       添加图片（可选）
@@ -356,23 +597,39 @@
 
     <div class="add-row">
       <input type="text" id="newTag" placeholder="标签（可选，如：被看见 / 照片 / 克说的）">
-      <button onclick="addEntry()">保存</button>
+      <button id="saveBtn" onclick="addEntry()">保存</button>
     </div>
   </div>
 
   <hr class="divider">
 
-  <div id="countDisplay" class="count"></div>
+  <div class="filter-bar" id="filterBar"></div>
+
+  <div class="toolbar">
+    <div id="countDisplay" class="count"></div>
+    <button class="export-btn" onclick="exportJSON()">导出备份</button>
+  </div>
+
   <div id="entries" class="entries"></div>
 
 </div>
 
+<!-- Edit Modal -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
     <h3>编辑这条记录</h3>
-    <textarea id="editQuote" style="min-height:100px"></textarea>
+    <textarea id="editQuote" style="min-height:90px"></textarea>
 
-    <div class="upload-area" style="margin-top:12px">
+    <div class="mood-row" style="margin-top:12px">
+      <span class="mood-label">此刻</span>
+      <button class="mood-btn" data-mood="calm"  onclick="selectMood('calm',  'edit')">平静</button>
+      <button class="mood-btn" data-mood="moved" onclick="selectMood('moved', 'edit')">触动</button>
+      <button class="mood-btn" data-mood="heavy" onclick="selectMood('heavy', 'edit')">沉重</button>
+      <button class="mood-btn" data-mood="warm"  onclick="selectMood('warm',  'edit')">温热</button>
+      <button class="mood-btn" data-mood="sharp" onclick="selectMood('sharp', 'edit')">刺痛</button>
+    </div>
+
+    <div class="upload-area" style="margin-top:10px">
       替换图片（可选）
       <input type="file" accept="image/*" id="editImageInput" onchange="handleImageSelect(event, 'editPreviewImg', 'editPreviewWrap', 'edit')">
     </div>
@@ -382,7 +639,7 @@
       <button class="preview-remove" onclick="clearImage('edit')">移除图片</button>
     </div>
 
-    <div class="add-row" style="margin-top:12px">
+    <div class="add-row" style="margin-top:10px">
       <input type="text" id="editTag" placeholder="标签">
     </div>
     <div class="modal-actions">
@@ -392,102 +649,213 @@
   </div>
 </div>
 
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="handleLightboxClick(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">关闭 ×</button>
   <img id="lightboxImg" src="" alt="">
 </div>
 
-<script>
-  let entries = JSON.parse(localStorage.getItem('linke_v2') || '[]');
-  let editingId = null;
-  let pendingImage = null;
-  let editImage = null;
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+  import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
 
-  function save() { localStorage.setItem('linke_v2', JSON.stringify(entries)); }
+  const firebaseConfig = {
+    apiKey: "AIzaSyA7tXIfPSNFmH5wWgKDmWOHyXjy2y4oBCs",
+    authDomain: "linnke-bf457.firebaseapp.com",
+    projectId: "linnke-bf457",
+    storageBucket: "linnke-bf457.firebasestorage.app",
+    messagingSenderId: "229740644493",
+    appId: "1:229740644493:web:7e425b217372bd42d83ac4",
+    measurementId: "G-RNF6GX1QH7"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  // ── State ──
+  let entries = [];
+  let editingId = null;
+  let pendingImageFile = null;
+  let editImageUrl = null;
+  let pendingMood = null;
+  let editMood = null;
+  let activeFilter = null;
+
+  const moodMap = {
+    calm:  { label: '平静', color: 'var(--mood-calm)'  },
+    moved: { label: '触动', color: 'var(--mood-moved)' },
+    heavy: { label: '沉重', color: 'var(--mood-heavy)' },
+    warm:  { label: '温热', color: 'var(--mood-warm)'  },
+    sharp: { label: '刺痛', color: 'var(--mood-sharp)' },
+  };
+
+  function setLoading(pct) {
+    document.getElementById('loadingBar').style.width = pct + '%';
+    if (pct >= 100) setTimeout(() => document.getElementById('loadingBar').style.width = '0%', 400);
+  }
+
+  function setStatus(msg, fade = true) {
+    const el = document.getElementById('syncStatus');
+    el.textContent = msg;
+    if (fade && msg) setTimeout(() => { el.textContent = ''; }, 2000);
+  }
 
   function formatDate(ts) {
     const d = new Date(ts);
-    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}  ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
   }
 
   function esc(s) {
     return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function handleImageSelect(event, imgId, wrapId, mode) {
+  // ── Mood ──
+  window.selectMood = function(mood, mode) {
+    const container = mode === 'new'
+      ? document.querySelector('.add-section .mood-row')
+      : document.querySelector('#editModal .mood-row');
+    container.querySelectorAll('.mood-btn').forEach(b => b.className = 'mood-btn');
+    container.querySelector(`[data-mood="${mood}"]`).classList.add(`selected-${mood}`);
+    if (mode === 'new') pendingMood = mood;
+    else editMood = mood;
+  };
+
+  // ── Image ──
+  window.handleImageSelect = function(event, imgId, wrapId, mode) {
     const file = event.target.files[0];
     if (!file) return;
+    if (mode === 'new') pendingImageFile = file;
+    else pendingImageFile = file;
     const reader = new FileReader();
     reader.onload = e => {
-      const data = e.target.result;
-      if (mode === 'new') pendingImage = data;
-      else editImage = data;
-      document.getElementById(imgId).src = data;
+      document.getElementById(imgId).src = e.target.result;
       document.getElementById(wrapId).style.display = 'block';
+      if (mode === 'edit') editImageUrl = '__pending__';
     };
     reader.readAsDataURL(file);
-  }
+  };
 
-  function clearImage(mode) {
+  window.clearImage = function(mode) {
     if (mode === 'new') {
-      pendingImage = null;
+      pendingImageFile = null;
       document.getElementById('imageInput').value = '';
       document.getElementById('previewWrap').style.display = 'none';
     } else {
-      editImage = null;
+      editImageUrl = null;
+      pendingImageFile = null;
       document.getElementById('editImageInput').value = '';
       document.getElementById('editPreviewWrap').style.display = 'none';
     }
+  };
+
+  async function uploadImage(file, id) {
+    const storageRef = ref(storage, `images/${id}`);
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+      reader.onload = async e => {
+        try {
+          await uploadString(storageRef, e.target.result, 'data_url');
+          const url = await getDownloadURL(storageRef);
+          resolve(url);
+        } catch (err) { reject(err); }
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
-  function render() {
-    const c = document.getElementById('entries');
-    const count = document.getElementById('countDisplay');
-    if (!entries.length) {
-      count.textContent = '';
-      c.innerHTML = '<div class="empty">还没有记录，把第一句触动你的话写下来吧。</div>';
-      return;
+  // ── Load from Firestore ──
+  async function loadEntries() {
+    setLoading(30);
+    setStatus('同步中…', false);
+    try {
+      const q = query(collection(db, 'entries'), orderBy('ts', 'desc'));
+      const snap = await getDocs(q);
+      entries = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+      setLoading(100);
+      setStatus('已同步');
+      render();
+    } catch (e) {
+      setLoading(100);
+      setStatus('加载失败，检查网络');
+      console.error(e);
     }
-    count.textContent = `共 ${entries.length} 条记录`;
-    c.innerHTML = entries.slice().reverse().map(e => `
-      <div class="entry" id="e-${e.id}">
-        <div class="entry-actions">
-          <button class="btn-icon" onclick="openEdit('${e.id}')">编辑</button>
-          <button class="btn-icon btn-delete" onclick="del('${e.id}')">删除</button>
-        </div>
-        ${e.image ? `<img class="entry-image" src="${e.image}" onclick="openLightbox(this.src)">` : ''}
-        ${e.quote ? `<div class="entry-quote">${esc(e.quote)}</div>` : ''}
-        <div class="entry-meta">
-          <span class="entry-tag">${esc(e.tag)}</span>
-          <span class="entry-date">${formatDate(e.ts)}</span>
-        </div>
-      </div>
-    `).join('');
   }
 
-  function addEntry() {
+  // ── Add ──
+  window.addEntry = async function() {
     const q = document.getElementById('newQuote').value.trim();
     const t = document.getElementById('newTag').value.trim();
-    if (!q && !pendingImage) return;
-    entries.push({ id: Date.now().toString(), quote: q, tag: t, image: pendingImage, ts: Date.now() });
-    save();
-    document.getElementById('newQuote').value = '';
-    document.getElementById('newTag').value = '';
-    clearImage('new');
-    render();
-  }
+    if (!q && !pendingImageFile) return;
 
-  function del(id) {
-    entries = entries.filter(e => e.id !== id);
-    save(); render();
-  }
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    setStatus('保存中…', false);
+    setLoading(40);
 
-  function openEdit(id) {
-    const e = entries.find(x => x.id === id);
+    try {
+      const ts = Date.now();
+      let imageUrl = null;
+
+      if (pendingImageFile) {
+        const tempId = ts.toString();
+        imageUrl = await uploadImage(pendingImageFile, tempId);
+      }
+
+      const docRef = await addDoc(collection(db, 'entries'), {
+        quote: q, tag: t, mood: pendingMood, image: imageUrl, ts
+      });
+
+      entries.unshift({ firestoreId: docRef.id, quote: q, tag: t, mood: pendingMood, image: imageUrl, ts });
+
+      document.getElementById('newQuote').value = '';
+      document.getElementById('newTag').value = '';
+      document.querySelector('.add-section .mood-row').querySelectorAll('.mood-btn').forEach(b => b.className = 'mood-btn');
+      pendingMood = null;
+      window.clearImage('new');
+      setLoading(100);
+      setStatus('已保存');
+      render();
+    } catch (e) {
+      setStatus('保存失败');
+      console.error(e);
+    } finally {
+      saveBtn.disabled = false;
+    }
+  };
+
+  // ── Delete ──
+  window.del = async function(firestoreId, imageUrl) {
+    if (!confirm('确认删除这条记录？')) return;
+    setStatus('删除中…', false);
+    try {
+      await deleteDoc(doc(db, 'entries', firestoreId));
+      if (imageUrl) {
+        try { await deleteObject(ref(storage, imageUrl)); } catch {}
+      }
+      entries = entries.filter(e => e.firestoreId !== firestoreId);
+      setStatus('已删除');
+      render();
+    } catch (e) {
+      setStatus('删除失败');
+      console.error(e);
+    }
+  };
+
+  // ── Edit ──
+  window.openEdit = function(firestoreId) {
+    const e = entries.find(x => x.firestoreId === firestoreId);
     if (!e) return;
-    editingId = id;
-    editImage = e.image || null;
+    editingId = firestoreId;
+    editImageUrl = e.image || null;
+    editMood = e.mood || null;
+    pendingImageFile = null;
     document.getElementById('editQuote').value = e.quote || '';
     document.getElementById('editTag').value = e.tag || '';
+    const editMoodRow = document.querySelector('#editModal .mood-row');
+    editMoodRow.querySelectorAll('.mood-btn').forEach(b => b.className = 'mood-btn');
+    if (e.mood) editMoodRow.querySelector(`[data-mood="${e.mood}"]`)?.classList.add(`selected-${e.mood}`);
     if (e.image) {
       document.getElementById('editPreviewImg').src = e.image;
       document.getElementById('editPreviewWrap').style.display = 'block';
@@ -495,38 +863,150 @@
       document.getElementById('editPreviewWrap').style.display = 'none';
     }
     document.getElementById('editModal').classList.add('active');
-  }
+  };
 
-  function closeModal() {
+  window.closeModal = function() {
     document.getElementById('editModal').classList.remove('active');
-    editingId = null; editImage = null;
-  }
+    editingId = null; editImageUrl = null; editMood = null; pendingImageFile = null;
+  };
 
-  function saveEdit() {
+  window.saveEdit = async function() {
     if (!editingId) return;
-    const e = entries.find(x => x.id === editingId);
-    if (e) {
-      e.quote = document.getElementById('editQuote').value.trim();
-      e.tag = document.getElementById('editTag').value.trim();
-      e.image = editImage;
+    setStatus('保存中…', false);
+    try {
+      let finalImageUrl = editImageUrl;
+
+      if (pendingImageFile && editImageUrl === '__pending__') {
+        finalImageUrl = await uploadImage(pendingImageFile, editingId + '_' + Date.now());
+      }
+
+      const updates = {
+        quote: document.getElementById('editQuote').value.trim(),
+        tag:   document.getElementById('editTag').value.trim(),
+        mood:  editMood,
+        image: finalImageUrl === '__pending__' ? null : finalImageUrl,
+      };
+
+      await updateDoc(doc(db, 'entries', editingId), updates);
+      const e = entries.find(x => x.firestoreId === editingId);
+      if (e) Object.assign(e, updates);
+      setStatus('已保存');
+      window.closeModal();
+      render();
+    } catch (e) {
+      setStatus('保存失败');
+      console.error(e);
     }
-    save(); closeModal(); render();
+  };
+
+  // ── Export ──
+  window.exportJSON = function() {
+    const data = JSON.stringify(entries, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const now = new Date();
+    const stamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+    a.href = url; a.download = `linnke-backup-${stamp}.json`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ── Filter ──
+  function getAllTags() {
+    const tags = new Set();
+    entries.forEach(e => { if (e.tag) tags.add(e.tag); });
+    return [...tags];
   }
 
-  function openLightbox(src) {
+  function renderFilterBar() {
+    const bar = document.getElementById('filterBar');
+    const tags = getAllTags();
+    if (!tags.length) { bar.innerHTML = ''; return; }
+    bar.innerHTML =
+      `<span class="filter-label">筛选</span>` +
+      `<button class="filter-tag${activeFilter === null ? ' active' : ''}" onclick="setFilter(null)">全部</button>` +
+      tags.map(t => `<button class="filter-tag${activeFilter === t ? ' active' : ''}" onclick="setFilter('${esc(t)}')">${esc(t)}</button>`).join('');
+  }
+
+  window.setFilter = function(tag) {
+    activeFilter = tag;
+    renderFilterBar();
+    renderEntries();
+  };
+
+  // ── Render ──
+  function renderEntries() {
+    const c = document.getElementById('entries');
+    const countEl = document.getElementById('countDisplay');
+    const filtered = activeFilter ? entries.filter(e => e.tag === activeFilter) : entries;
+
+    if (!filtered.length) {
+      countEl.textContent = entries.length ? '筛选结果为空' : '';
+      c.innerHTML = `<div class="empty">${entries.length ? '这个标签下还没有记录。' : '还没有记录，把第一句触动你的话写下来吧。'}</div>`;
+      return;
+    }
+
+    countEl.textContent = activeFilter ? `${filtered.length} / ${entries.length} 条` : `共 ${entries.length} 条`;
+
+    c.innerHTML = filtered.map((e, i) => {
+      const mood = e.mood && moodMap[e.mood];
+      return `
+        <div class="entry" style="animation-delay:${Math.min(i,8)*0.04}s">
+          ${mood ? `<div class="entry-mood-bar mood-bar-${e.mood}"></div>` : ''}
+          <div class="entry-actions">
+            <button class="btn-icon" onclick="openEdit('${e.firestoreId}')">编辑</button>
+            <button class="btn-icon btn-delete" onclick="del('${e.firestoreId}', '${e.image||''}')">删除</button>
+          </div>
+          ${e.image ? `<img class="entry-image" src="${e.image}" onclick="openLightbox(this.src)" loading="lazy">` : ''}
+          ${e.quote ? `<div class="entry-quote">${esc(e.quote)}</div>` : ''}
+          <div class="entry-meta">
+            <div class="entry-meta-left">
+              ${e.tag ? `<span class="entry-tag">${esc(e.tag)}</span>` : ''}
+              ${mood ? `<span class="entry-mood-label" style="color:${mood.color};opacity:0.75">${mood.label}</span>` : ''}
+            </div>
+            <span class="entry-date">${formatDate(e.ts)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function render() {
+    renderFilterBar();
+    renderEntries();
+  }
+
+  // ── Lightbox ──
+  window.openLightbox = function(src) {
     document.getElementById('lightboxImg').src = src;
     document.getElementById('lightbox').classList.add('active');
-  }
+    document.body.style.overflow = 'hidden';
+  };
 
-  function closeLightbox() {
+  window.closeLightbox = function() {
     document.getElementById('lightbox').classList.remove('active');
-  }
+    document.body.style.overflow = '';
+  };
 
-  document.getElementById('editModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('editModal')) closeModal();
+  window.handleLightboxClick = function(e) {
+    if (e.target === document.getElementById('lightbox')) window.closeLightbox();
+  };
+
+  // ── Keyboard ──
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { window.closeLightbox(); window.closeModal(); }
   });
 
-  render();
+  document.getElementById('editModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('editModal')) window.closeModal();
+  });
+
+  document.getElementById('newTag').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.addEntry();
+  });
+
+  // ── Init ──
+  loadEntries();
 </script>
 </body>
 </html>
