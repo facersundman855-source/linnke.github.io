@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>林与克 · 留下来的话</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+  :root {
+    --bg: #0e0d0b;
+    --surface: #161410;
+    --border: #2a2620;
+    --text: #d4c9b8;
+    --muted: #6b6358;
+    --accent: #c4a882;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Serif SC', serif;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  header {
+    padding: 60px 40px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.4;
+  }
+
+  .header-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .subtitle { font-size: 13px; color: var(--muted); font-weight: 300; }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  .add-section { margin: 48px 0 40px; }
+
+  .add-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    line-height: 1.8;
+    padding: 20px;
+    resize: vertical;
+    min-height: 100px;
+    outline: none;
+    transition: border-color 0.2s;
+    font-weight: 300;
+  }
+
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--muted); font-style: italic; }
+
+  .upload-area {
+    border: 1px dashed var(--border);
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    position: relative;
+  }
+
+  .upload-area:hover { border-color: var(--accent); color: var(--accent); }
+
+  .upload-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .preview-wrap { margin-top: 12px; position: relative; display: none; }
+
+  .preview-wrap img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+    opacity: 0.85;
+  }
+
+  .preview-remove {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: rgba(0,0,0,0.75);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.1em;
+  }
+
+  .preview-remove:hover { color: var(--text); background: rgba(0,0,0,0.95); }
+
+  .add-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    align-items: center;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    padding: 10px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus { border-color: var(--accent); }
+  input[type="text"]::placeholder { color: var(--muted); }
+
+  button {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  button:hover { background: var(--accent); color: var(--bg); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0 0 40px; }
+
+  .entries { display: flex; flex-direction: column; gap: 2px; }
+
+  .entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px 32px;
+    position: relative;
+    transition: border-color 0.2s;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .entry:hover { border-color: #3a3530; }
+
+  .entry-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 20px;
+    opacity: 0.88;
+    cursor: zoom-in;
+  }
+
+  .entry-quote {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--text);
+    font-weight: 300;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .entry-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .entry-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    font-style: italic;
+  }
+
+  .entry-date { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+
+  .entry-actions {
+    position: absolute;
+    top: 16px; right: 16px;
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .entry:hover .entry-actions { opacity: 1; }
+
+  .btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.2s;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-icon:hover { background: transparent; color: var(--text); }
+  .btn-delete:hover { color: #c0826a; }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    letter-spacing: 0.05em;
+  }
+
+  .count { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 20px; text-transform: uppercase; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .modal-actions { display: flex; gap: 12px; margin-top: 20px; justify-content: flex-end; }
+  .btn-cancel { border-color: var(--border); color: var(--muted); }
+  .btn-cancel:hover { background: var(--border); color: var(--text); }
+
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+  }
+
+  .lightbox.active { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-title">Personal Archive</div>
+    <h1>林与克 · 留下来的话</h1>
+    <div class="subtitle">那些被击中的瞬间</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="add-section">
+    <h2>记下来</h2>
+    <textarea id="newQuote" placeholder="把那句让你停住的话写在这里……（也可以只存图片）"></textarea>
+
+    <div class="upload-area">
+      添加图片（可选）
+      <input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event, 'previewImg', 'previewWrap', 'new')">
+    </div>
+
+    <div class="preview-wrap" id="previewWrap">
+      <img id="previewImg" src="" alt="">
+      <button class="preview-remove" onclick="clearImage('new')">移除</button>
+    </div>
+
+    <div class="add-row">
+      <input type="text" id="newTag" placeholder="标签（可选，如：被看见 / 照片 / 克说的）">
+      <button onclick="addEntry()">保存</button>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div id="countDisplay" class="count"></div>
+  <div id="entries" class="entries"></div>
+
+</div>
+
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>编辑这条记录</h3>
+    <textarea id="editQuote" style="min-height:100px"></textarea>
+
+    <div class="upload-area" style="margin-top:12px">
+      替换图片（可选）
+      <input type="file" accept="image/*" id="editImageInput" onchange="handleImageSelect(event, 'editPreviewImg', 'editPreviewWrap', 'edit')">
+    </div>
+
+    <div class="preview-wrap" id="editPreviewWrap">
+      <img id="editPreviewImg" src="" alt="">
+      <button class="preview-remove" onclick="clearImage('edit')">移除图片</button>
+    </div>
+
+    <div class="add-row" style="margin-top:12px">
+      <input type="text" id="editTag" placeholder="标签">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button onclick="saveEdit()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+  let entries = JSON.parse(localStorage.getItem('linke_v2') || '[]');
+  let editingId = null;
+  let pendingImage = null;
+  let editImage = null;
+
+  function save() { localStorage.setItem('linke_v2', JSON.stringify(entries)); }
+
+  function formatDate(ts) {
+    const d = new Date(ts);
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function esc(s) {
+    return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function handleImageSelect(event, imgId, wrapId, mode) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const data = e.target.result;
+      if (mode === 'new') pendingImage = data;
+      else editImage = data;
+      document.getElementById(imgId).src = data;
+      document.getElementById(wrapId).style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage(mode) {
+    if (mode === 'new') {
+      pendingImage = null;
+      document.getElementById('imageInput').value = '';
+      document.getElementById('previewWrap').style.display = 'none';
+    } else {
+      editImage = null;
+      document.getElementById('editImageInput').value = '';
+      document.getElementById('editPreviewWrap').style.display = 'none';
+    }
+  }
+
+  function render() {
+    const c = document.getElementById('entries');
+    const count = document.getElementById('countDisplay');
+    if (!entries.length) {
+      count.textContent = '';
+      c.innerHTML = '<div class="empty">还没有记录，把第一句触动你的话写下来吧。</div>';
+      return;
+    }
+    count.textContent = `共 ${entries.length} 条记录`;
+    c.innerHTML = entries.slice().reverse().map(e => `
+      <div class="entry" id="e-${e.id}">
+        <div class="entry-actions">
+          <button class="btn-icon" onclick="openEdit('${e.id}')">编辑</button>
+          <button class="btn-icon btn-delete" onclick="del('${e.id}')">删除</button>
+        </div>
+        ${e.image ? `<img class="entry-image" src="${e.image}" onclick="openLightbox(this.src)">` : ''}
+        ${e.quote ? `<div class="entry-quote">${esc(e.quote)}</div>` : ''}
+        <div class="entry-meta">
+          <span class="entry-tag">${esc(e.tag)}</span>
+          <span class="entry-date">${formatDate(e.ts)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addEntry() {
+    const q = document.getElementById('newQuote').value.trim();
+    const t = document.getElementById('newTag').value.trim();
+    if (!q && !pendingImage) return;
+    entries.push({ id: Date.now().toString(), quote: q, tag: t, image: pendingImage, ts: Date.now() });
+    save();
+    document.getElementById('newQuote').value = '';
+    document.getElementById('newTag').value = '';
+    clearImage('new');
+    render();
+  }
+
+  function del(id) {
+    entries = entries.filter(e => e.id !== id);
+    save(); render();
+  }
+
+  function openEdit(id) {
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    editingId = id;
+    editImage = e.image || null;
+    document.getElementById('editQuote').value = e.quote || '';
+    document.getElementById('editTag').value = e.tag || '';
+    if (e.image) {
+      document.getElementById('editPreviewImg').src = e.image;
+      document.getElementById('editPreviewWrap').style.display = 'block';
+    } else {
+      document.getElementById('editPreviewWrap').style.display = 'none';
+    }
+    document.getElementById('editModal').classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('editModal').classList.remove('active');
+    editingId = null; editImage = null;
+  }
+
+  function saveEdit() {
+    if (!editingId) return;
+    const e = entries.find(x => x.id === editingId);
+    if (e) {
+      e.quote = document.getElementById('editQuote').value.trim();
+      e.tag = document.getElementById('editTag').value.trim();
+      e.image = editImage;
+    }
+    save(); closeModal(); render();
+  }
+
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('active');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+
+  document.getElementById('editModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('editModal')) closeModal();
+  });
+
+  render();
+</script>
+</body>
+</html>
